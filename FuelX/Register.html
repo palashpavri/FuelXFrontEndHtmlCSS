@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — FuelX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="tailwind-config.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="register" class="text-slate-200 antialiased">
+  <div id="toasts" class="fixed top-4 right-4 z-[1000] flex flex-col gap-2 w-[calc(100%-2rem)] max-w-xs"></div>
+
+  <div class="min-h-screen grid lg:grid-cols-2">
+
+    <!-- Brand panel -->
+    <aside class="hero-bg relative hidden lg:flex flex-col justify-between p-12 overflow-hidden">
+      <a href="index.html" class="flex items-center gap-2 font-extrabold text-2xl text-white w-fit">
+        <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-flame-400 to-rose-500 flex items-center justify-center"><i data-lucide="fuel" class="w-5 h-5 text-ink"></i></span>
+        Fuel<span class="text-flame-400">X</span>
+      </a>
+      <div>
+        <h2 class="text-4xl font-black text-white leading-tight">Fuel delivered<br><span class="bg-gradient-to-r from-flame-400 to-rose-400 bg-clip-text text-transparent">when you need it most.</span></h2>
+        <ul class="mt-8 space-y-4 text-slate-300">
+          <li class="flex items-center gap-3"><span class="w-9 h-9 rounded-xl glass flex items-center justify-center">📍</span> Share your exact location</li>
+          <li class="flex items-center gap-3"><span class="w-9 h-9 rounded-xl glass flex items-center justify-center">🛵</span> Track your rider live</li>
+          <li class="flex items-center gap-3"><span class="w-9 h-9 rounded-xl glass flex items-center justify-center">⚡</span> Fast emergency requests</li>
+        </ul>
+      </div>
+      <p class="text-xs text-slate-500">© FuelX — BCA Project</p>
+      <div class="float absolute -right-16 -bottom-16 w-72 h-72 rounded-full bg-flame-500/20 blur-3xl"></div>
+    </aside>
+
+    <!-- Form panel -->
+    <main class="flex items-center justify-center p-5 sm:p-10">
+      <div class="w-full max-w-md">
+        <a href="index.html" class="lg:hidden flex items-center gap-2 font-extrabold text-xl text-white mb-8 w-fit">
+          <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-flame-400 to-rose-500 flex items-center justify-center"><i data-lucide="fuel" class="w-5 h-5 text-ink"></i></span>
+          Fuel<span class="text-flame-400">X</span>
+        </a>
+
+        <h1 class="text-3xl font-black text-white">Create your account</h1>
+        <p class="mt-1.5 text-sm text-slate-400">Join FuelX as a user or a delivery driver.</p>
+
+        <!-- Role switch -->
+        <div class="mt-6 grid grid-cols-2 gap-1 p-1 rounded-2xl glass">
+          <button type="button" id="role-user" onclick="setRole('user')" class="py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition"><i data-lucide="user" class="w-4 h-4"></i> User</button>
+          <button type="button" id="role-driver" onclick="setRole('driver')" class="py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition"><i data-lucide="bike" class="w-4 h-4"></i> Driver</button>
+        </div>
+
+        <form id="auth-form" onsubmit="handleRegister(event)" class="mt-6 space-y-4" novalidate>
+          <div>
+            <label for="r-name" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Full name</label>
+            <div class="relative mt-1.5">
+              <input id="r-name" type="text" placeholder="e.g. Rohan Verma"  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-flame-500 transition ">
+              
+            </div>
+          </div>
+          <div>
+            <label for="r-phone" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Phone number</label>
+            <div class="relative mt-1.5">
+              <input id="r-phone" type="tel" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-flame-500 transition ">
+              
+            </div>
+          </div>
+          <div id="driver-fields" class="hidden space-y-4">
+            <div>
+              <label for="r-vtype" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Vehicle type</label>
+              <select id="r-vtype" class="mt-1.5 w-full bg-ink border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-flame-500">
+                <option>Motorcycle</option><option>Scooter</option><option>Mini Van</option>
+              </select>
+            </div>
+            <div>
+            <label for="r-vno" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Vehicle number</label>
+            <div class="relative mt-1.5">
+              <input id="r-vno" type="text" placeholder="MP 09 AB 1234"  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-flame-500 transition ">
+              
+            </div>
+          </div>
+          </div>
+          <div>
+            <label for="r-pass" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Password</label>
+            <div class="relative mt-1.5">
+              <input id="r-pass" type="password" placeholder="Min 6 characters" oninput="checkStrength(this.value)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-flame-500 transition pr-11">
+              <button type="button" onclick="togglePw('r-pass')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"><i data-lucide="eye" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="-mt-2">
+            <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div id="strength-bar" class="h-full w-0 transition-all duration-300"></div></div>
+            <p id="strength-text" class="mt-1 text-[11px] text-slate-500">Use letters, numbers and symbols</p>
+          </div>
+          <div>
+            <label for="r-pass2" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Confirm password</label>
+            <div class="relative mt-1.5">
+              <input id="r-pass2" type="password" placeholder="Re-enter password"  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-flame-500 transition pr-11">
+              <button type="button" onclick="togglePw('r-pass2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"><i data-lucide="eye" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <p id="form-error" class="hidden text-sm font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-xl px-3.5 py-2.5"></p>
+          <button id="submit-btn" type="submit" class="glow-btn w-full transition bg-gradient-to-r from-flame-500 to-rose-500 text-white font-extrabold py-3.5 rounded-2xl flex items-center justify-center gap-2">
+            <span id="submit-text">Create account</span>
+          </button>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-slate-400">Already have an account? <a href="login.html" class="font-bold text-flame-400 hover:text-flame-500">Log in</a></p>
+        <p class="mt-3 text-center"><a href="index.html" class="text-xs text-slate-500 hover:text-white transition">← Back to home</a></p>
+      </div>
+    </main>
+  </div>
+  <script src="auth.js"></script>
+</body>
+</html>
